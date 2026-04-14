@@ -43,7 +43,7 @@ export const components: Partial<Components> = {
       className="mx-auto rounded-lg"
     />
   ),
-  iframe: ({ allowFullScreen, ...props }: any) => (
+  iframe: ({ allowFullScreen, autoPlay, loop, ...props }: any) => (
     <iframe
       className="w-full h-full aspect-video mx-auto rounded-lg"
       allowFullScreen={
@@ -51,6 +51,10 @@ export const components: Partial<Components> = {
           ? allowFullScreen !== "false"
           : undefined
       }
+      autoPlay={
+        autoPlay !== undefined ? autoPlay !== "false" : undefined
+      }
+      loop={loop !== undefined ? loop !== "false" : undefined}
       {...props}
     />
     //  <div className="relative pt-[56.25%] rounded-lg overflow-hidden">
