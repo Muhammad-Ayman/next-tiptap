@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
+import { getPersistedPost } from "@/lib/post-store";
 import TiptapRenderer from "@/components/tiptap-renderer/server-renderer";
-import postService from "@/services/post";
 
 import PostContent from "../../components/shared/post-content";
 import PostHeader from "../../components/shared/post-header";
@@ -11,7 +11,7 @@ import PostToc from "../../components/shared/post-toc";
 import PostReadingProgress from "../../components/shared/reading-progress";
 
 export default async function PostPage() {
-  const post = await postService.get();
+  const post = await getPersistedPost();
 
   if (!post) return notFound();
 

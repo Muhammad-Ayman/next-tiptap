@@ -22,6 +22,19 @@ const addHeadingIds = () => {
   };
 };
 
+const normalizeTableWhitespace = () => {
+  return (tree: Root) => {
+    visit(tree, "element", (node) => {
+      if (node.tagName === "colgroup") {
+        node.children = node.children.filter((child) => {
+          return !(child.type === "text" && child.value.trim() === "");
+        });
+      }
+    });
+    return tree;
+  };
+};
+
 function slugify(text: string): string {
   return text
     .toLowerCase()
@@ -36,6 +49,7 @@ export function createProcessor({ components }: ProcessorOptions = {}) {
   return unified()
     .use(rehypeParse, { fragment: true })
     .use(addHeadingIds)
+    .use(normalizeTableWhitespace)
     .use(rehypeReact, {
       ...production,
       components,

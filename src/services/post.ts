@@ -12,37 +12,40 @@ export type Post = {
   createdAt: string;
 };
 
-const getPost = (): Promise<Post> => {
-  return new Promise<Post>((resolve, reject) => {
-    setTimeout(() => {
-      if (typeof window !== "undefined") {
-        try {
-          const data = localStorage.getItem("post");
-          const parsed: Post = data ? JSON.parse(data) : mockData;
+const getPost = async (): Promise<Post> => {
+  try {
+    const response = await fetch("/api/post", {
+      method: "GET",
+      cache: "no-store",
+    });
 
-          if (!data) {
-            savePost(mockData);
-          }
+    if (!response.ok) {
+      console.warn("Failed to fetch persisted post, using mock data");
+      return mockData as Post;
+    }
 
-          return resolve(parsed);
-        } catch {
-          return reject();
-        }
-      }
-
-      return resolve(mockData);
-    }, 200);
-  });
+    return (await response.json()) as Post;
+  } catch (error) {
+    console.error("Failed to fetch persisted post:", error);
+    return mockData as Post;
+  }
 };
 
-const savePost = (data: Partial<Post>): void => {
-  if (typeof window === "undefined") return;
-
+const savePost = async (data: Partial<Post>): Promise<void> => {
   try {
-    const value: Post = { ...mockData, ...data };
-    localStorage.setItem("post", JSON.stringify(value));
+    const response = await fetch("/api/post", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      console.warn("Failed to save persisted post");
+    }
   } catch (error) {
-    console.error("Error saving to localStorage:", error);
+    console.error("Failed to save persisted post:", error);
   }
 };
 

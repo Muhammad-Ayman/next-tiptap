@@ -43,9 +43,14 @@ export const components: Partial<Components> = {
       className="mx-auto rounded-lg"
     />
   ),
-  iframe: ({ ...props }) => (
+  iframe: ({ allowFullScreen, ...props }: any) => (
     <iframe
       className="w-full h-full aspect-video mx-auto rounded-lg"
+      allowFullScreen={
+        allowFullScreen !== undefined
+          ? allowFullScreen !== "false"
+          : undefined
+      }
       {...props}
     />
     //  <div className="relative pt-[56.25%] rounded-lg overflow-hidden">
@@ -87,5 +92,5 @@ export const components: Partial<Components> = {
     />
   ),
   td: (props: any) => <td className="px-2.5 py-3.5" {...props} />,
-  th: (props: any) => <td className="px-2.5 py-3.5 font-bold" {...props} />,
+  th: (props: any) => <th className="px-2.5 py-3.5 font-bold" {...props} />,
 };
